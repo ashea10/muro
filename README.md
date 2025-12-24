@@ -1,135 +1,287 @@
-# Turborepo starter
+# Muro - Collaborative Whiteboard
 
-This Turborepo starter is maintained by the Turborepo core team.
+<div align="center">
+  <h3>🎨 Enterprise-grade collaborative whiteboard for high-performance teams</h3>
+  <p>Real-time sync • Infinite canvas • Zero latency</p>
+  
+  ![CI](https://github.com/YOUR_GITHUB_USERNAME/muro/actions/workflows/ci.yml/badge.svg)
+  ![Docker](https://github.com/YOUR_GITHUB_USERNAME/muro/actions/workflows/docker-build.yml/badge.svg)
+</div>
 
-## Using this example
+---
 
-Run the following command:
+## ✨ Features
 
-```sh
-npx create-turbo@latest
-```
+### Drawing Tools
+- **Rectangle** - Draw rectangles with customizable colors
+- **Circle** - Create perfect circles
+- **Line** - Draw straight lines
+- **Arrow** - Lines with arrowheads
+- **Pencil** - Freehand drawing
+- **Text** - Add text annotations
+- **Sticky Notes** - Yellow sticky notes for ideas
+- **Eraser** - Remove shapes from canvas
 
-## What's inside?
+### Canvas Features
+- **Pan & Zoom** - Infinite canvas navigation
+  - Scroll to zoom
+  - Middle-click or Space+drag to pan
+- **Selection System**
+  - Click to select shapes
+  - Shift+click for multi-select
+  - Drag to create selection box
+  - Move/delete selected shapes
+- **Export** - Download as PNG or SVG
+- **Undo/Redo** - Full history with Ctrl+Z / Ctrl+Y
 
-This Turborepo includes the following packages/apps:
+### Real-time Collaboration
+- **Live Cursors** - See collaborators' positions
+- **Instant Sync** - Shapes appear immediately for all users
+- **User Presence** - See who's online in your room
 
-### Apps and Packages
+### Security & Performance
+- **JWT Authentication** - Secure user sessions
+- **Rate Limiting** - Protection against abuse
+- **Optimized Rendering** - Smooth performance with many shapes
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+---
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
-
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
-
-### Build
-
-To build all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
-```
-
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 🏗️ Architecture
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
+muro/
+├── .github/workflows/    # CI/CD pipelines
+├── k8s/                  # Kubernetes manifests
+├── apps/
+│   ├── http-server/      # REST API (Express.js)
+│   ├── ws-server/        # WebSocket server
+│   └── muro-frontend/    # Next.js frontend
+├── packages/
+│   ├── common/           # Shared types & Game class
+│   ├── db/               # Prisma schema & client
+│   ├── backend-common/   # Shared backend configuration
+│   ├── ui/               # Shared UI components
+│   ├── typescript-config/
+│   └── eslint-config/
+└── docker-compose.yml
 ```
 
-### Develop
+### Tech Stack
+- **Frontend**: Next.js 14, React, TypeScript, Tailwind CSS
+- **Backend**: Express.js, WebSocket (ws)
+- **Database**: PostgreSQL with Prisma ORM
+- **Build**: Turborepo monorepo
+- **Package Manager**: pnpm
+- **CI/CD**: GitHub Actions
+- **Container Orchestration**: Kubernetes, Docker
 
-To develop all apps and packages, run the following command:
+---
 
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js >= 18
+- pnpm >= 9.0.0
+- PostgreSQL (or use Docker)
+
+### Development Setup
+
+1. **Clone and install dependencies**
+   ```bash
+   git clone <repository-url>
+   cd muro
+   pnpm install
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database URL and JWT secret
+   ```
+
+3. **Set up the database**
+   ```bash
+   cd packages/db
+   npx prisma migrate dev
+   npx prisma generate
+   cd ../..
+   ```
+
+4. **Start development servers**
+   ```bash
+   pnpm dev
+   ```
+
+   This starts all services:
+   - Frontend: http://localhost:3000
+   - HTTP API: http://localhost:3001
+   - WebSocket: ws://localhost:8080
+
+### Docker Setup
+
+For a containerized development environment:
+
+```bash
+# Start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev
+### Kubernetes Deployment
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
+Deploy to Kubernetes (local or cloud):
+
+```bash
+# Prerequisites: kubectl, minikube (for local)
+minikube start --driver=docker --memory=4096
+minikube addons enable ingress
+
+# Build and load images
+docker build -t muro/http-server:local -f apps/http-server/Dockerfile .
+docker build -t muro/ws-server:local -f apps/ws-server/Dockerfile .
+docker build -t muro/frontend:local -f apps/muro-frontend/Dockerfile .
+minikube image load muro/http-server:local muro/ws-server:local muro/frontend:local
+
+# Deploy all resources
+kubectl apply -k k8s/
+
+# Watch pods start
+kubectl get pods -n muro -w
+
+# Access the app
+kubectl port-forward -n muro svc/frontend 3000:3000
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+📖 **Full guide**: [docs/local-k8s-guide.md](docs/local-k8s-guide.md)
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+---
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+## 📡 API Reference
 
-### Remote Caching
+### Authentication
 
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+#### POST `/api/auth/signup`
+Create a new user account.
+```json
+{
+  "username": "user@example.com",
+  "password": "password123",
+  "name": "John Doe"
+}
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
-
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+#### POST `/api/auth/signin`
+Authenticate and receive JWT token.
+```json
+{
+  "username": "user@example.com",
+  "password": "password123"
+}
 ```
 
-## Useful Links
+### Rooms
 
-Learn more about the power of Turborepo:
+#### POST `/api/room` (Protected)
+Create a new whiteboard room.
+```json
+{
+  "name": "Project Brainstorm"
+}
+```
 
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
+#### GET `/api/room/my-rooms` (Protected)
+Get all rooms owned by the authenticated user.
+
+#### GET `/api/room/:roomId`
+Get room details and shapes.
+
+#### DELETE `/api/room/:roomId` (Protected)
+Delete a room (owner only).
+
+### WebSocket Events
+
+Connect to: `ws://localhost:8080?token=<jwt_token>`
+
+#### Send Events
+```typescript
+{ type: "join_room", roomId: "123" }
+{ type: "leave_room", roomId: "123" }
+{ type: "draw", roomId: "123", shape: Shape }
+{ type: "delete", roomId: "123", shapeId: "abc" }
+{ type: "cursor", roomId: "123", x: 100, y: 200 }
+```
+
+#### Receive Events
+```typescript
+{ type: "draw", shape: Shape }
+{ type: "delete", shapeId: "abc" }
+{ type: "cursor", userId: "xyz", name: "John", x: 100, y: 200 }
+{ type: "user_joined", userId: "xyz", name: "John" }
+{ type: "user_left", userId: "xyz" }
+```
+
+---
+
+## 🧪 Testing
+
+```bash
+# Run all tests
+pnpm test
+
+# Run tests for specific package
+pnpm --filter @repo/common test
+pnpm --filter http-server test
+```
+
+---
+
+## 📦 Building for Production
+
+```bash
+# Build all packages
+pnpm build
+
+# Build specific app
+pnpm --filter muro-frontend build
+```
+
+---
+
+## 🔧 Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | PostgreSQL connection string | - |
+| `JWT_SECRET` | Secret for JWT signing | - |
+| `PORT` | HTTP server port | 3001 |
+| `WS_PORT` | WebSocket server port | 8080 |
+| `FRONTEND_URL` | Frontend URL for CORS | http://localhost:3000 |
+| `NEXT_PUBLIC_BACKEND_URL` | Backend URL for frontend | http://localhost:3001 |
+| `NEXT_PUBLIC_WS_URL` | WebSocket URL for frontend | ws://localhost:8080 |
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the ISC License.
+
+---
+
+<div align="center">
+  Made with ❤️ for collaborative creativity
+</div>
