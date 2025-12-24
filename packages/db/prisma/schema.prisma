@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/client"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String  @id @default(uuid())
+  email     String  @unique
+  password  String
+  name      String
+  photo     String?
+  rooms     Room[]
+}
+
+model Room {
+  id        Int         @id @default(autoincrement())
+  slug      String      @unique
+  name      String      @default("New Room")
+  createdAt DateTime    @default(now())
+  adminId   String
+  admin     User        @relation(fields: [adminId], references: [id])
+  shapes    Shape[]
+}
+
+model Shape {
+  id        Int         @id @default(autoincrement())
+  roomId    Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  order     Int         @default(0)
+
+  type    String
+  message String      // JSON string of the shape (x, y, points etc)
+  room    Room        @relation(fields: [roomId], references: [id])
+
+  @@index([roomId])
+  @@index([roomId, order])
+}
