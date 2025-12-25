@@ -1,0 +1,21 @@
+{
+  "name": "@repo/backend-common",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    "./config": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^22.15.3"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
