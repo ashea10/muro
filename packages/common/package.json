@@ -1,0 +1,24 @@
+{
+  "name": "@repo/common",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "exports": {
+    "./types": "./dist/types.js",
+    "./draw": "./dist/draw/Game.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "zod": "^4.2.1"
+  }
+}
