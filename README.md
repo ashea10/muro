@@ -1,11 +1,11 @@
 # Muro - Collaborative Whiteboard
 
 <div align="center">
-  <h3>🎨 Enterprise-grade collaborative whiteboard for high-performance teams</h3>
-  <p>Real-time sync • Infinite canvas • Zero latency</p>
+  <h3>🎨 A real-time collaborative whiteboard</h3>
+  <p>Draw together • Infinite canvas • WebSocket sync</p>
   
-  ![CI](https://github.com/YOUR_GITHUB_USERNAME/muro/actions/workflows/ci.yml/badge.svg)
-  ![Docker](https://github.com/YOUR_GITHUB_USERNAME/muro/actions/workflows/docker-build.yml/badge.svg)
+  ![CI](https://github.com/ashea10/muro/actions/workflows/ci.yml/badge.svg)
+  ![Docker](https://github.com/ashea10/muro/actions/workflows/docker-build.yml/badge.svg)
 </div>
 
 ---
@@ -134,29 +134,6 @@ docker-compose down
 
 ### Kubernetes Deployment
 
-Deploy to Kubernetes (local or cloud):
-
-```bash
-# Prerequisites: kubectl, minikube (for local)
-minikube start --driver=docker --memory=4096
-minikube addons enable ingress
-
-# Build and load images
-docker build -t muro/http-server:local -f apps/http-server/Dockerfile .
-docker build -t muro/ws-server:local -f apps/ws-server/Dockerfile .
-docker build -t muro/frontend:local -f apps/muro-frontend/Dockerfile .
-minikube image load muro/http-server:local muro/ws-server:local muro/frontend:local
-
-# Deploy all resources
-kubectl apply -k k8s/
-
-# Watch pods start
-kubectl get pods -n muro -w
-
-# Access the app
-kubectl port-forward -n muro svc/frontend 3000:3000
-```
-
 📖 **Full guide**: [docs/local-k8s-guide.md](docs/local-k8s-guide.md)
 
 ---
@@ -265,20 +242,6 @@ pnpm --filter muro-frontend build
 | `NEXT_PUBLIC_WS_URL` | WebSocket URL for frontend | ws://localhost:8080 |
 
 ---
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the ISC License.
 
 ---
 
