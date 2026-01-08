@@ -1,0 +1,31 @@
+# Kustomization file for easy deployment
+# Usage: kubectl apply -k k8s/
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: muro
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secrets.yaml
+  - postgres.yaml
+  - http-server.yaml
+  - ws-server.yaml
+  - frontend.yaml
+  - ingress.yaml
+  - hpa.yaml
+
+# Common labels applied to all resources
+commonLabels:
+  app.kubernetes.io/managed-by: kustomize
+  app.kubernetes.io/version: "1.0.0"
+
+# Image customization - override these for your registry
+images:
+  - name: ghcr.io/ashea10/muro-http-server
+    newTag: latest
+  - name: ghcr.io/ashea10/muro-ws-server
+    newTag: latest
+  - name: ghcr.io/ashea10/muro-frontend
+    newTag: latest

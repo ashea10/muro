@@ -1,0 +1,9 @@
+# Muro Namespace
+# All application resources are isolated in this namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: muro
+  labels:
+    app.kubernetes.io/name: muro
+    app.kubernetes.io/part-of: muro

@@ -1,0 +1,66 @@
+# Ingress Configuration
+# Supports both NGINX Ingress Controller and AWS ALB Ingress Controller
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: muro-ingress
+  namespace: muro
+  labels:
+    app.kubernetes.io/name: muro-ingress
+    app.kubernetes.io/part-of: muro
+  annotations:
+    # ===== NGINX Ingress Controller (Minikube, Docker Desktop, etc.) =====
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    # WebSocket support
+    nginx.ingress.kubernetes.io/websocket-services: "ws-server"
+    nginx.ingress.kubernetes.io/proxy-http-version: "1.1"
+    nginx.ingress.kubernetes.io/upstream-hash-by: "$remote_addr"
+    
+    # ===== AWS ALB Ingress Controller (EKS) =====
+    # Uncomment these for AWS deployment:
+    # kubernetes.io/ingress.class: alb
+    # alb.ingress.kubernetes.io/scheme: internet-facing
+    # alb.ingress.kubernetes.io/target-type: ip
+    # alb.ingress.kubernetes.io/healthcheck-path: /health
+    # alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # alb.ingress.kubernetes.io/ssl-redirect: '443'
+spec:
+  ingressClassName: nginx  # Change to "alb" for AWS
+  rules:
+    - http:
+        paths:
+          # Frontend - default route
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 3000
+          
+          # HTTP API - /api routes
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: http-server
+                port:
+                  number: 3001
+          
+          # WebSocket - /ws routes
+          - path: /ws
+            pathType: Prefix
+            backend:
+              service:
+                name: ws-server
+                port:
+                  number: 8080
+  
+  # TLS Configuration (optional - requires cert-manager or manual cert)
+  # Uncomment and configure for HTTPS:
+  # tls:
+  #   - hosts:
+  #       - muro.yourdomain.com
+  #     secretName: muro-tls-secret

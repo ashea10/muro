@@ -1,0 +1,25 @@
+# ConfigMap for non-sensitive configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: muro-config
+  namespace: muro
+  labels:
+    app.kubernetes.io/name: muro
+data:
+  # HTTP Server Configuration
+  HTTP_PORT: "3001"
+  
+  # WebSocket Server Configuration
+  WS_PORT: "8080"
+  
+  # Frontend Configuration
+  FRONTEND_PORT: "3000"
+  
+  # Internal service URLs (for inter-service communication)
+  FRONTEND_URL: "http://frontend:3000"
+  BACKEND_URL: "http://http-server:3001"
+  WS_URL: "ws://ws-server:8080"
+  
+  # Node environment
+  NODE_ENV: "production"
